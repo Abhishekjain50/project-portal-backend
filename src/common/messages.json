@@ -1,0 +1,32 @@
+{
+  "en": {
+    "INTERNAL_SERVER_ERROR": "Internal Server Error",
+    "SOMETHING_WENT_WRONG": "Something went wrong",
+    "LOGIN_SUCCESS": "Login successfully",
+    "RESET_SUCCESS": "Your password has been reset successfully. You can now login with new password.",
+    "OTP_RESEND": "OTP has been resent successfully",
+    "OTP_VERIFY": "OTP has been verified",
+    "FORGOT_EMAIL_SENT": "We have sent OTP in your registered Email ID.",
+    "ERROR": "Error",
+    "AUTH_TOKEN_REQUIRED": "Auth Token Required",
+    "TOKEN_MALFORMED": "Token malformed",
+    "TOKEN_EXPIRED": "Token Expired",
+    "REFRESH_MALFORMED": "Refresh Token malformed",
+    "INVALID_EMAIL": "Unauthorized Email",
+    "INVALID_PASSWORD": "Password does not match",
+    "INCORRECT_OTP": "OTP does not match",
+    "OLD_NEW_PASSWORD_SAME": "Please enter different password. This password is match with your last password",
+    "RE_EMAIL_EXIT": "This email is already Registered",
+    "TOKEN_REFRESHED": "Token Update successfully",
+    "SUCCESS": "success",
+    "LOGOUT_SUCCESS": "Logout Successfully",
+    "ADMIN_ACCESS_ONLY": "Only Admin Can Access",
+    "ID_NOT_FOUND": "Details Not Found",
+    "USER_ID_NOT_FOUND": "User Id Not Found",
+    "DATA_NOT_FOUND": "Data Not Available",
+    "REGISTER_SUCCESS": "Registration successful",
+    "APPLICATION_SUBMITTED": "Application submitted successfully",
+    "APPLICATIONS_FETCHED": "Applications fetched successfully",
+    "APPLICATION_FETCHED": "Application details fetched successfully"
+  }
+}
