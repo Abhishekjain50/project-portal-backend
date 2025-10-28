@@ -16,6 +16,7 @@ export const databaseConfig: TypeOrmModuleOptions = {
   synchronize: true,
   logging: true,
   autoLoadEntities: true,
+  connectTimeout: 10000,
   extra: {
     "sql_mode": "",
     "connectionLimit": 25,
