@@ -55,7 +55,8 @@ async function bootstrap() {
 
   app.setGlobalPrefix("v1/api");
 
-  // Serve static files from public directory
+  // Serve static files from public d
+  // irectory
   app.useStaticAssets(path.join(__dirname, '..', 'public'), {
     prefix: '/public/',  // This adds /public prefix to all static files
   });
@@ -66,6 +67,6 @@ async function bootstrap() {
   };
   app.useGlobalPipes(new ValidationPipe(validationOptions));
 
-  await app.listen(3000);
+  await app.listen(4000);
 }
 bootstrap();
