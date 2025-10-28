@@ -53,7 +53,7 @@ async function bootstrap() {
     res.send("success");
   });
 
-  app.setGlobalPrefix("v1");
+  app.setGlobalPrefix("v1/api");
 
   // Serve static files from public directory
   app.useStaticAssets(path.join(__dirname, '..', 'public'), {
