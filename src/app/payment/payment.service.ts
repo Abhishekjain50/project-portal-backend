@@ -18,7 +18,7 @@ export class PaymentService {
     @Inject(DataSource)
     private dataSource: DataSource,
   ) {
-    const secretKey = process.env.STRIPE_SECRET_KEYx;
+    const secretKey = process.env.STRIPE_SECRET_KEY;
     
     if (!secretKey) {
       throw new Error("STRIPE_SECRET_KEY is not defined");
