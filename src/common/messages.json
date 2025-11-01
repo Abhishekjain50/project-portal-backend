@@ -27,6 +27,9 @@
     "REGISTER_SUCCESS": "Registration successful",
     "APPLICATION_SUBMITTED": "Application submitted successfully",
     "APPLICATIONS_FETCHED": "Applications fetched successfully",
-    "APPLICATION_FETCHED": "Application details fetched successfully"
+    "APPLICATION_FETCHED": "Application details fetched successfully",
+    "PAYMENT_SUCCESS": "Payment processed successfully",
+    "CHECKOUT_CREATED": "Checkout session created successfully",
+    "PAYMENT_STATUS": "Payment status retrieved successfully"
   }
 }

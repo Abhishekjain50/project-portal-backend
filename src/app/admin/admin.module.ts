@@ -9,10 +9,14 @@ import { User } from "src/entities/user.entity";
 import { UserToken } from "src/entities/userToken.entity";
 import { Application } from "src/entities/application.entity";
 import { EmailService } from "src/services/email.service";
+import { PaymentModule } from "../payment/payment.module";
 dotenv.config();
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, UserToken, Application])],
+  imports: [
+    TypeOrmModule.forFeature([User, UserToken, Application]),
+    PaymentModule
+  ],
   controllers: [AdminController],
   providers: [
     AdminService,

@@ -47,6 +47,9 @@ async function bootstrap() {
   //   origin: "*",
   //   credentials: true,
   // });
+  
+  // Configure raw body for Stripe webhook
+  app.use('/v1/api/payment/webhook', express.raw({ type: 'application/json' }));
   app.use(json({ limit: "15mb" }));
 
   server.get('/health', (req: Request, res: Response) => {

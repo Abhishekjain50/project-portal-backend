@@ -256,7 +256,7 @@ export class AdminController {
   ) {
     try {
       console.log(body.user_id)
-      const data = await this.adminService.createApplication(
+      const result = await this.adminService.createApplication(
         body,
         {
           face_photo_url: files?.face_photo?.[0]?.filename,
@@ -265,7 +265,20 @@ export class AdminController {
         },
         req.body.user_id
       );
-      this.responseService.success(res, "APPLICATION_SUBMITTED", data);
+      
+      // Prepare response data
+      const responseData: any = {
+        application: result.data,
+      };
+      
+      // Add checkout info if payment was initiated
+      if (result.checkoutUrl) {
+        responseData.checkoutUrl = result.checkoutUrl;
+        responseData.sessionId = result.sessionId;
+        responseData.message = "Application created successfully. Click checkoutUrl to complete payment.";
+      }
+      
+      this.responseService.success(res, "APPLICATION_SUBMITTED", responseData);
     } catch (error) {
       if (error.status) {
         this.responseService.error(req, res, error.message, error.status);
@@ -281,8 +294,16 @@ export class AdminController {
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
+      const status = req.query.status as string; // Get status from query params
       console.log(req.body);
-      const data = await this.adminService.getApplications(req.body.user_id, page, limit, req.body);
+      
+      // Prepare body with status filter
+      const filterBody = {
+        ...req.body,
+        status: status || req.body.status // Support both query param and body
+      };
+      
+      const data = await this.adminService.getApplications(req.body.user_id, page, limit, filterBody);
       this.responseService.success(res, "APPLICATIONS_FETCHED", data);
     } catch (error) {
       if (error.status) {

@@ -109,6 +109,17 @@ export class Application {
   @Column({ default: false })
   is_consent_provided: boolean;
 
+  @Column({ nullable: true })
+  stripe_session_id: string;
+
+  @Column({ nullable: true, type: 'decimal', precision: 10, scale: 2 })
+  amount: number;
+
+  @Column({ nullable: true, length: 10 })
+  currency: string;
+
+  @Column({ nullable: true, default: 'success' })
+  status: string; // success, failed
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 

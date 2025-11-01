@@ -11,6 +11,7 @@ import { MulterModule } from "@nestjs/platform-express";
 import { LoggerMiddleware } from "./middlewares/logger.middleware";
 import { APP_PIPE } from "@nestjs/core";
 import { AdminModule } from "./app/admin/admin.module";
+import { PaymentModule } from "./app/payment/payment.module";
 
 @Module({
   controllers: [],
@@ -24,7 +25,8 @@ import { AdminModule } from "./app/admin/admin.module";
   ],
   imports: [
     TypeOrmModule.forRoot(databaseConfig),
-    AdminModule
+    AdminModule,
+    PaymentModule
   ],
 })
 export class AppModule {

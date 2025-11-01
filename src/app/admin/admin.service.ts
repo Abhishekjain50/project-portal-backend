@@ -19,6 +19,7 @@ import { Repository, Not, Between, IsNull, In } from "typeorm";
 import { error } from "console";
 import { User } from "src/entities/user.entity";
 import { UserToken } from "src/entities/userToken.entity";
+import { PaymentService } from "../payment/payment.service";
 
 @Injectable()
 export class AdminService {
@@ -30,7 +31,8 @@ export class AdminService {
     private tokenRepository: Repository<UserToken>,
     @Inject(DataSource)
     private dataSource: DataSource,
-    private emailService: EmailService
+    private emailService: EmailService,
+    private paymentService: PaymentService
   ) { }
   async login(body: LoginDTO) {
     try {
@@ -365,32 +367,82 @@ export class AdminService {
   async createApplication(body: any, files: any, userId: number) {
     try {
       console.log(body)
+      
+      // Extract payment fields if provided
+      const { amount, currency, successUrl, cancelUrl, ...applicationData } = body;
+      let checkoutResult = null;
+      
+      // Create Stripe checkout session if amount and currency are provided
+      if (amount && currency) {
+        try {
+          checkoutResult = await this.paymentService.createCheckoutSession(
+            parseFloat(amount),
+            currency,
+            successUrl,
+            cancelUrl
+          );
+        } catch (paymentError) {
+          throw {
+            message: paymentError.message || "Failed to create payment checkout",
+            status: 400
+          };
+        }
+      }
+      
       if(body.id) {
-        delete body.user_id; // prevent changing user_id on update
-        await this.dataSource.getRepository("application").update({id: body.id}, {
-          ...body,
+        delete applicationData.user_id; // prevent changing user_id on update
+        
+        const updateData: any = {
+          ...applicationData,
           face_photo_url: files.face_photo_url ? `https://thermometrically-riotous-jackelyn.ngrok-free.dev/public/${files.face_photo_url}` : null,
           passport_page: files.passport_page ? `https://thermometrically-riotous-jackelyn.ngrok-free.dev/public/${files.passport_page}` : null,
           letter: files.letter ? `https://thermometrically-riotous-jackelyn.ngrok-free.dev/public/${files.letter}` : null,
-          created_at: new Date(),
           updated_at: new Date()
-        });
+        };
+        
+        // Add payment fields if checkout was created
+        if (checkoutResult) {
+          updateData.stripe_session_id = checkoutResult.sessionId;
+          updateData.amount = parseFloat(amount);
+          updateData.currency = currency.toUpperCase();
+          updateData.status = 'success';
+        }
+        
+        await this.dataSource.getRepository("application").update({id: body.id}, updateData);
 
         const updated = await this.dataSource.getRepository("application").findOne({where: {id: body.id}});
-        return {data: updated}
+        return {
+          data: updated,
+          checkoutUrl: checkoutResult?.checkoutUrl || null,
+          sessionId: checkoutResult?.sessionId || null
+        };
       } else {
-        const application = await this.dataSource.getRepository("application").create({
-          ...body,
+        const applicationDataToSave: any = {
+          ...applicationData,
           user: { id: body.user_id },
           face_photo_url: files.face_photo_url ? `https://thermometrically-riotous-jackelyn.ngrok-free.dev/public/${files.face_photo_url}` : null,
           passport_page: files.passport_page ? `https://thermometrically-riotous-jackelyn.ngrok-free.dev/public/${files.passport_page}` : null,
           letter: files.letter ? `https://thermometrically-riotous-jackelyn.ngrok-free.dev/public/${files.letter}` : null,
           created_at: new Date(),
           updated_at: new Date()
-        });
+        };
+        
+        // Add payment fields if checkout was created
+        if (checkoutResult) {
+          applicationDataToSave.stripe_session_id = checkoutResult.sessionId;
+          applicationDataToSave.amount = parseFloat(amount);
+          applicationDataToSave.currency = currency.toUpperCase();
+          applicationDataToSave.status = 'success';
+        }
 
+        const application = await this.dataSource.getRepository("application").create(applicationDataToSave);
         const saved = await this.dataSource.getRepository("application").save(application);
-        return {data: saved}
+        
+        return {
+          data: saved,
+          checkoutUrl: checkoutResult?.checkoutUrl || null,
+          sessionId: checkoutResult?.sessionId || null
+        };
       }
     } catch (error) {
       throw error;
@@ -407,6 +459,11 @@ export class AdminService {
         where = {id: Not(IsNull())};
       } else {
         where = { user: { id: userId } };
+      }
+      
+      // Add status filter if provided (only success or failed)
+      if (body.status && (body.status === 'success' || body.status === 'failed')) {
+        where.status = body.status;
       }
       
       const [applications, total] = await Promise.all([
