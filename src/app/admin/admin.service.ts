@@ -380,6 +380,14 @@ export class AdminService {
             successUrl,
             cancelUrl
           );
+
+          await this.dataSource.getRepository("application").update({id: body.id}, { is_consent_provided: body?.is_consent_provided ? body.is_consent_provided : false });
+          const updated = await this.dataSource.getRepository("application").findOne({where: {id: body.id}});
+          return {
+            data: updated,
+            checkoutUrl: checkoutResult?.checkoutUrl || null,
+            sessionId: checkoutResult?.sessionId || null
+          };
         } catch (paymentError) {
           throw {
             message: paymentError.message || "Failed to create payment checkout",
