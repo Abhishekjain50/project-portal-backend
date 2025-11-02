@@ -368,11 +368,10 @@ export class AdminService {
     try {
       console.log(body)
       
-      // Extract payment fields if provided
+      
       const { amount, currency, successUrl, cancelUrl, ...applicationData } = body;
       let checkoutResult = null;
       
-      // Create Stripe checkout session if amount and currency are provided
       if (amount && currency) {
         try {
           checkoutResult = await this.paymentService.createCheckoutSession(
@@ -419,7 +418,7 @@ export class AdminService {
       } else {
         const applicationDataToSave: any = {
           ...applicationData,
-          user: { id: body.user_id },
+          user: { id: userId },
           face_photo_url: files.face_photo_url ? `https://thermometrically-riotous-jackelyn.ngrok-free.dev/public/${files.face_photo_url}` : null,
           passport_page: files.passport_page ? `https://thermometrically-riotous-jackelyn.ngrok-free.dev/public/${files.passport_page}` : null,
           letter: files.letter ? `https://thermometrically-riotous-jackelyn.ngrok-free.dev/public/${files.letter}` : null,

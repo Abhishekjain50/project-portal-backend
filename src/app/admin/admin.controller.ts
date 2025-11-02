@@ -255,23 +255,23 @@ export class AdminController {
     }
   ) {
     try {
-      console.log(body.user_id)
+      const user_id = req.user?.user_id || req.body.user_id;
+      const { user_id: _, ...applicationBody } = body;
+      
       const result = await this.adminService.createApplication(
-        body,
+        applicationBody,
         {
           face_photo_url: files?.face_photo?.[0]?.filename,
           passport_page: files?.passport_page?.[0]?.filename,
           letter: files?.letter?.[0]?.filename
         },
-        req.body.user_id
+        user_id
       );
       
-      // Prepare response data
       const responseData: any = {
         application: result.data,
       };
       
-      // Add checkout info if payment was initiated
       if (result.checkoutUrl) {
         responseData.checkoutUrl = result.checkoutUrl;
         responseData.sessionId = result.sessionId;
