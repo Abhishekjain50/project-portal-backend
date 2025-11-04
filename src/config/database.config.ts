@@ -7,10 +7,10 @@ dotenv.config();
 
 export const databaseConfig: TypeOrmModuleOptions = {
   type: "mysql",
-  host: "portal-db.cpyik84c0rkw.eu-central-1.rds.amazonaws.com",
+  host: "infinora.cd2ayua6gzyi.ap-south-1.rds.amazonaws.com",
   port: 3306,
-  username: "root",
-  password: "9(l+osj4*6Cy",
+  username: "infinora",
+  password: "lFlgDLND12jY25ye",
   database: "project-portal",
   entities: [join(__dirname, "../entities/**/*.entity{.ts,.js}")],
   synchronize: true,
