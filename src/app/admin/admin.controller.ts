@@ -219,31 +219,6 @@ export class AdminController {
 
   @Post("/application")
   @ApiAdminCommonDecorators()
-  @UseInterceptors(
-    FileFieldsInterceptor([
-      { name: 'face_photo', maxCount: 1 },
-      { name: 'passport_page', maxCount: 1 },
-      { name: 'letter', maxCount: 1 }
-    ], {
-      storage: multerS3({
-        s3: s3,
-        bucket: process.env.AWS_S3_BUCKET_NAME,
-        key: (req, file, cb) => {
-          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-          cb(null, `${uniqueSuffix}-${file.originalname}`);
-        },
-      }),
-      fileFilter: (req, file, cb) => {
-        if (!file.originalname.match(/\.(jpg|jpeg|png|pdf)$/)) {
-          return cb(new Error('Only image and PDF files are allowed!'), false);
-        }
-        cb(null, true);
-      },
-      limits: {
-        fileSize: 5 * 1024 * 1024 // 5MB
-      }
-    })
-  )
   async createApplication(
     @Req() req,
     @Res() res: Response,
@@ -402,5 +377,35 @@ export class AdminController {
         this.responseService.error(req, res, error.message);
       }
     }
+  }
+
+  @Post("/upload-file")
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: multerS3({
+        s3: s3,
+        bucket: process.env.AWS_S3_BUCKET_NAME,
+        key: (req, file, cb) => {
+          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+          cb(null, `${uniqueSuffix}-${file.originalname}`);
+        },
+      }),
+      fileFilter: (req, file, cb) => {
+        if (!file.originalname.match(/\.(jpg|jpeg|png|pdf|doc|docx)$/)) {
+          return cb(new Error('Only image and document files are allowed!'), false);
+        }
+        cb(null, true);
+      },
+      limits: {
+        fileSize: 5 * 1024 * 1024 // 5MB
+      }
+    })
+  )
+  async uploadFile(@Req() req, @Res() res: Response, @UploadedFile() file: any) {
+    if (!file) {
+      return this.responseService.error(req, res, 'FILE_NOT_UPLOADED', 400);
+    }
+    const data = { url: file.location };
+    this.responseService.success(res, "FILE_UPLOADED_SUCCESSFULLY", data);
   }
 }

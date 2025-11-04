@@ -426,9 +426,6 @@ export class AdminService {
         const applicationDataToSave: any = {
           ...applicationData,
           user: { id: userId },
-          face_photo_url: files.face_photo_url || null,
-          passport_page: files.passport_page || null,
-          letter: files.letter || null,
           created_at: new Date(),
           updated_at: new Date()
         };
