@@ -125,4 +125,94 @@ export class Application {
 
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
+
+  @Column({ nullable: true })
+  consulate: string;
+
+  @Column({ nullable: true })
+  arrivalDate: Date | null;
+
+  @Column({ nullable: true })
+  departureDate: Date | null
+
+  @Column({ nullable: true })
+  borderCrossing: string;
+
+  @Column({ nullable: true })
+  transport: string;
+
+  @Column({ nullable: true })
+  visaType: string;
+
+  @Column({ nullable: true })
+  travelPurpose: string;
+
+  @Column({ nullable: true })
+  daysOfStay: string;
+
+  @Column({ nullable: true })
+  otherVisaIssued: string
+
+  @Column({ nullable: true })
+  previousStay: string;
+
+  @Column({ nullable: true })
+  hostName: string;
+
+  @Column({ nullable: true })
+  hostTelephone: string;
+
+  @Column({ nullable: true })
+  hostAddress: string;
+  
+  @Column({ nullable: true })
+  hostEmail: string;
+
+  @Column({ nullable: true })
+  municipality: string;
+
+  @Column({ nullable: true })
+  settlement: string;
+
+  @Column({ nullable: true })
+  street: string;
+
+  @Column({ nullable: true })
+  houseNumber: string;
+
+  @Column({ nullable: true })
+  entrance: string;
+
+  @Column({ nullable: true })
+  floor: string;
+
+  @Column({ nullable: true })
+  apartment: string;
+
+  @Column({ nullable: true })
+  whoCovers: string;
+
+  @Column({ nullable: true })
+  financialResources: string;
+
+  @Column({ nullable: true })
+  passportIssuingCountry: string;
+
+  @Column({ nullable: true })
+  travelDocumentType: string;
+
+  @Column({ nullable: true })
+  liveOutsideOrigin: string;
+
+  @Column({ nullable: true })
+  travelDocumentNumber: string;
+
+  @Column({ type: 'date', nullable: true })
+  dateOfIssue: Date;
+
+  @Column({ nullable: true })
+  countryOfIssue: string;
+
+  @Column({ type: 'date', nullable: true })
+  validUntil: Date;
 }
