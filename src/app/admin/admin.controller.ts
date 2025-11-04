@@ -30,10 +30,10 @@ import { ApiAdminCommonDecorators, ApiAdminRefreshCommonDecorators } from "src/c
 import { AdminAuthGuard } from "src/guard/admin.guard";
 
 const s3 = new S3Client({
-  region: "ap-south-1",
+  region: process.env.AWS_REGION,
   credentials: {
-    accessKeyId: "AKIAX54IBYWM2FXKTEGB",
-    secretAccessKey: "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",
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   },
 });
 
@@ -74,7 +74,7 @@ export class AdminController {
     FileInterceptor('document', {
       storage: multerS3({
         s3: s3,
-        bucket: "groundly",
+        bucket: process.env.AWS_S3_BUCKET_NAME,
         key: (req, file, cb) => {
           const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
           cb(null, `${uniqueSuffix}-${file.originalname}`);
@@ -227,7 +227,7 @@ export class AdminController {
     ], {
       storage: multerS3({
         s3: s3,
-        bucket: "groundly",
+        bucket: process.env.AWS_S3_BUCKET_NAME,
         key: (req, file, cb) => {
           const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
           cb(null, `${uniqueSuffix}-${file.originalname}`);
