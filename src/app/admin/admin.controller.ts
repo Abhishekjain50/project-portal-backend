@@ -75,6 +75,8 @@ export class AdminController {
       storage: multerS3({
         s3: s3,
         bucket: process.env.AWS_S3_BUCKET_NAME,
+        contentType: multerS3.AUTO_CONTENT_TYPE,
+        contentDisposition: 'inline',
         key: (req, file, cb) => {
           const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
           cb(null, `${uniqueSuffix}-${file.originalname}`);
@@ -219,6 +221,28 @@ export class AdminController {
 
   @Post("/application")
   @ApiAdminCommonDecorators()
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [
+        { name: 'face_photo', maxCount: 1 },
+        { name: 'passport_page', maxCount: 1 },
+        { name: 'letter', maxCount: 1 }
+      ], {
+      storage: multerS3({
+        s3: s3,
+        bucket: process.env.AWS_S3_BUCKET_NAME,
+        contentType: multerS3.AUTO_CONTENT_TYPE,
+        contentDisposition: 'inline',
+        key: (req, file, cb) => {
+          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+          cb(null, `${uniqueSuffix}-${file.originalname}`);
+        },
+      }),
+      fileFilter: (req, file, cb) => {
+        cb(null, true);
+      },
+    })
+  )
   async createApplication(
     @Req() req,
     @Res() res: Response,
@@ -385,6 +409,8 @@ export class AdminController {
       storage: multerS3({
         s3: s3,
         bucket: process.env.AWS_S3_BUCKET_NAME,
+        contentType: multerS3.AUTO_CONTENT_TYPE,
+        contentDisposition: 'inline',
         key: (req, file, cb) => {
           const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
           cb(null, `${uniqueSuffix}-${file.originalname}`);
