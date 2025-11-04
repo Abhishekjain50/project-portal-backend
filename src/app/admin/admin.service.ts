@@ -301,8 +301,7 @@ export class AdminService {
       // Handle file upload
       if (files && files.length > 0) {
         const file = files[0]; // Take the first file
-        user.document_file = file.filename || file.originalname;
-        user.document_file = `https://thermometrically-riotous-jackelyn.ngrok-free.dev/public/${user.document_file}`;
+        user.document_file = file.location; // Use the location from S3
       }
 
       const saved = await this.userRepository.save(user);
@@ -401,9 +400,9 @@ export class AdminService {
         
         const updateData: any = {
           ...applicationData,
-          face_photo_url: files.face_photo_url ? `https://thermometrically-riotous-jackelyn.ngrok-free.dev/public/${files.face_photo_url}` : null,
-          passport_page: files.passport_page ? `https://thermometrically-riotous-jackelyn.ngrok-free.dev/public/${files.passport_page}` : null,
-          letter: files.letter ? `https://thermometrically-riotous-jackelyn.ngrok-free.dev/public/${files.letter}` : null,
+          face_photo_url: files.face_photo_url || null,
+          passport_page: files.passport_page || null,
+          letter: files.letter || null,
           updated_at: new Date()
         };
         
@@ -427,9 +426,9 @@ export class AdminService {
         const applicationDataToSave: any = {
           ...applicationData,
           user: { id: userId },
-          face_photo_url: files.face_photo_url ? `https://thermometrically-riotous-jackelyn.ngrok-free.dev/public/${files.face_photo_url}` : null,
-          passport_page: files.passport_page ? `https://thermometrically-riotous-jackelyn.ngrok-free.dev/public/${files.passport_page}` : null,
-          letter: files.letter ? `https://thermometrically-riotous-jackelyn.ngrok-free.dev/public/${files.letter}` : null,
+          face_photo_url: files.face_photo_url || null,
+          passport_page: files.passport_page || null,
+          letter: files.letter || null,
           created_at: new Date(),
           updated_at: new Date()
         };
@@ -620,6 +619,21 @@ export class AdminService {
       await this.userRepository.update({id}, { is_deleted: true });
       
       return existing;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async updateStatus(body: any) {
+    try {
+      const { id, status } = body;
+      
+      const existing = await this.dataSource.getRepository("application").findOne({where: {id: body.id}});
+      if (!existing) throw { message: "USER_NOT_FOUND", status: 404 };
+      
+      await this.dataSource.getRepository("application").update({id}, { status });
+      
+      return {};
     } catch (error) {
       throw error;
     }

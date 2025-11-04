@@ -20,11 +20,22 @@ import {
   ResetPasswordDTO,
   VerifyOtpDTO,
 } from "./dto";
-import { FileInterceptor, FileFieldsInterceptor } from "@nestjs/platform-express";
-import { diskStorage } from 'multer';
-import * as fs from 'fs';
+import {
+  FileInterceptor,
+  FileFieldsInterceptor,
+} from "@nestjs/platform-express";
+import { S3Client } from "@aws-sdk/client-s3";
+import * as multerS3 from "multer-s3";
 import { ApiAdminCommonDecorators, ApiAdminRefreshCommonDecorators } from "src/common/swagger.decorator";
 import { AdminAuthGuard } from "src/guard/admin.guard";
+
+const s3 = new S3Client({
+  region: "ap-south-1",
+  credentials: {
+    accessKeyId: "AKIAX54IBYWM2FXKTEGB",
+    secretAccessKey: "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",
+  },
+});
 
 @Controller("/admin")
 @ApiTags("Admin")
@@ -61,19 +72,13 @@ export class AdminController {
   @Post("/register")
   @UseInterceptors(
     FileInterceptor('document', {
-      storage: diskStorage({
-        destination: (req, file, cb) => {
-          const uploadPath = './public';
-          // Create directory if it doesn't exist
-          if (!fs.existsSync(uploadPath)) {
-            fs.mkdirSync(uploadPath, { recursive: true });
-          }
-          cb(null, uploadPath);
-        },
-        filename: (req, file, cb) => {
+      storage: multerS3({
+        s3: s3,
+        bucket: "groundly",
+        key: (req, file, cb) => {
           const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
           cb(null, `${uniqueSuffix}-${file.originalname}`);
-        }
+        },
       }),
       fileFilter: (req, file, cb) => {
         if (!file.originalname.match(/\.(jpg|jpeg|png|pdf)$/)) {
@@ -220,18 +225,13 @@ export class AdminController {
       { name: 'passport_page', maxCount: 1 },
       { name: 'letter', maxCount: 1 }
     ], {
-      storage: diskStorage({
-        destination: (req, file, cb) => {
-          const uploadPath = './public';
-          if (!fs.existsSync(uploadPath)) {
-            fs.mkdirSync(uploadPath, { recursive: true });
-          }
-          cb(null, uploadPath);
-        },
-        filename: (req, file, cb) => {
+      storage: multerS3({
+        s3: s3,
+        bucket: "groundly",
+        key: (req, file, cb) => {
           const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
           cb(null, `${uniqueSuffix}-${file.originalname}`);
-        }
+        },
       }),
       fileFilter: (req, file, cb) => {
         if (!file.originalname.match(/\.(jpg|jpeg|png|pdf)$/)) {
@@ -261,9 +261,9 @@ export class AdminController {
       const result = await this.adminService.createApplication(
         applicationBody,
         {
-          face_photo_url: files?.face_photo?.[0]?.filename,
-          passport_page: files?.passport_page?.[0]?.filename,
-          letter: files?.letter?.[0]?.filename
+          face_photo_url: (files?.face_photo?.[0] as any)?.location,
+          passport_page: (files?.passport_page?.[0] as any)?.location,
+          letter: (files?.letter?.[0] as any)?.location
         },
         user_id
       );
@@ -379,6 +379,21 @@ export class AdminController {
   async deleteUser(@Req() req, @Res() res: Response) {
     try {
       const data = await this.adminService.deleteUser(req.body);
+      this.responseService.success(res, "USER_DELETED", data);
+    } catch (error) {
+      if (error.status) {
+        this.responseService.error(req, res, error.message, error.status);
+      } else {
+        this.responseService.error(req, res, error.message);
+      }
+    }
+  }
+
+  @Post("/updateStatus")
+  @ApiAdminCommonDecorators()
+  async updateStatus(@Req() req, @Res() res: Response) {
+    try {
+      const data = await this.adminService.updateStatus(req.body);
       this.responseService.success(res, "USER_DELETED", data);
     } catch (error) {
       if (error.status) {
