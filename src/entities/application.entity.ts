@@ -101,7 +101,28 @@ export class Application {
   face_photo_url: string;
 
   @Column({ nullable: true })
-  passport_page: string;
+  passport_page: string; 
+
+  @Column({ nullable: true })
+  invitation_letter: string;
+
+  @Column({ nullable: true })
+  certificate_registration: string;
+
+  @Column({ nullable: true })
+  employment_proposal: string
+
+  @Column({ nullable: true })
+  extract_rulebook: string;
+
+  @Column({ nullable: true })
+  diploma_certificate: string;
+
+  @Column({ nullable: true })
+  additional1: string;
+
+  @Column({ nullable: true })
+  additional2: string;
 
   @Column({ nullable: true })
   letter: string;
@@ -215,4 +236,7 @@ export class Application {
 
   @Column({ type: 'date', nullable: true })
   validUntil: Date;
+
+  @Column({ nullable: true })
+  live_outside_origin: string;
 }
