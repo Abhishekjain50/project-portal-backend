@@ -409,7 +409,7 @@ export class AdminService {
           updateData.stripe_session_id = checkoutResult.sessionId;
           updateData.amount = parseFloat(amount);
           updateData.currency = currency.toUpperCase();
-          updateData.status = 'success';
+          updateData.status = 'Request Submitted';
         }
         
         await this.dataSource.getRepository("application").update({id: body.id}, updateData);
@@ -433,7 +433,7 @@ export class AdminService {
           applicationDataToSave.stripe_session_id = checkoutResult.sessionId;
           applicationDataToSave.amount = parseFloat(amount);
           applicationDataToSave.currency = currency.toUpperCase();
-          applicationDataToSave.status = 'success';
+          applicationDataToSave.status = 'Request Submitted';
         }
 
         const application = await this.dataSource.getRepository("application").create(applicationDataToSave);

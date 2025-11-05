@@ -175,7 +175,7 @@ export class PaymentController {
       if (session.payment_status === 'paid') {
         await this.paymentService.updatePaymentStatus(
           sessionId,
-          'success'
+          'Request Submitted'
         );
       }
 

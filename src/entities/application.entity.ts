@@ -139,7 +139,7 @@ export class Application {
   @Column({ nullable: true, length: 10 })
   currency: string;
 
-  @Column({ nullable: true, default: 'success' })
+  @Column({ nullable: true, default: 'Request Submitted' })
   status: string; // success, failed
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
