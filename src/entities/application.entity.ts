@@ -1,5 +1,6 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, ManyToOne, JoinColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, ManyToOne, JoinColumn, BeforeInsert, getRepository } from "typeorm";
 import { User } from "./user.entity";
+import { v4 as uuidv4 } from "uuid";
 
 @Entity({ name: 'application' })
 export class Application {
@@ -9,6 +10,12 @@ export class Application {
   @ManyToOne(() => User, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn({ name: 'user_id' })
   user: User;
+
+  @Column({ type: 'int', unique: true, nullable: true })
+  visa_id: number;
+
+  @Column({ type: 'varchar', unique: true })
+  req_id: string;
 
   @Column({ nullable: true })
   purpose: string;
@@ -239,4 +246,12 @@ export class Application {
 
   @Column({ nullable: true })
   live_outside_origin: string;
+
+  @BeforeInsert()
+  async generateIds() {
+    this.visa_id = Math.floor(1000 + Math.random() * 9000);
+
+    // Generate a unique req_id using UUID (or you can use another format if you prefer)
+    this.req_id = uuidv4();
+  }
 }
