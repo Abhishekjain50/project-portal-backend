@@ -14,7 +14,7 @@ export class Application {
   @Column({ type: 'int', unique: true, nullable: true })
   visa_id: number;
 
-  @Column({ type: 'varchar', unique: true })
+  @Column({ type: 'varchar' })
   req_id: string;
 
   @Column({ nullable: true, type: 'text' })
