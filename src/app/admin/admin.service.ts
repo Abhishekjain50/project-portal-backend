@@ -400,6 +400,15 @@ export class AdminService {
         
         const updateData: any = {
           ...applicationData,
+          dob: applicationData.dob ? new Date(applicationData.dob) : null,
+          date_of_issue: applicationData.date_of_issue ? new Date(applicationData.date_of_issue) : null,
+          doc_valid_dates: applicationData.doc_valid_dates ? new Date(applicationData.doc_valid_dates) : null,
+          date_of_arrival: applicationData.date_of_arrival ? new Date(applicationData.date_of_arrival) : null,
+          date_of_departure: applicationData.date_of_departure ? new Date(applicationData.date_of_departure) : null,
+          arrivalDate: applicationData.arrivalDate ? new Date(applicationData.arrivalDate) : null,
+          departureDate: applicationData.departureDate ? new Date(applicationData.departureDate) : null,
+          dateOfIssue: applicationData.dateOfIssue ? new Date(applicationData.dateOfIssue) : null,
+          validUntil: applicationData.validUntil ? new Date(applicationData.validUntil) : null,
           letter: files.letter || null,
           updated_at: new Date()
         };
@@ -424,6 +433,15 @@ export class AdminService {
         const applicationDataToSave: any = {
           ...applicationData,
           user: { id: userId },
+          dob: applicationData.dob ? new Date(applicationData.dob) : null,
+          date_of_issue: applicationData.date_of_issue ? new Date(applicationData.date_of_issue) : null,
+          doc_valid_dates: applicationData.doc_valid_dates ? new Date(applicationData.doc_valid_dates) : null,
+          date_of_arrival: applicationData.date_of_arrival ? new Date(applicationData.date_of_arrival) : null,
+          date_of_departure: applicationData.date_of_departure ? new Date(applicationData.date_of_departure) : null,
+          arrivalDate: applicationData.arrivalDate ? new Date(applicationData.arrivalDate) : null,
+          departureDate: applicationData.departureDate ? new Date(applicationData.departureDate) : null,
+          dateOfIssue: applicationData.dateOfIssue ? new Date(applicationData.dateOfIssue) : null,
+          validUntil: applicationData.validUntil ? new Date(applicationData.validUntil) : null,
           created_at: new Date(),
           updated_at: new Date()
         };

@@ -17,10 +17,10 @@ export class Application {
   @Column({ type: 'varchar', unique: true })
   req_id: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'text' })
   purpose: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'text' })
   specific_purpose: string;
 
   @Column({ nullable: true, type: 'text' })
@@ -30,7 +30,7 @@ export class Application {
   last_name: string;
 
   @Column({ nullable: true, type: 'text' })
-  address: string;
+  address: string; 
 
   @Column({ nullable: true })
   last_name_at_birth: string;
@@ -190,7 +190,7 @@ export class Application {
   @Column({ nullable: true })
   hostTelephone: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'text' })
   hostAddress: string;
   
   @Column({ nullable: true })
