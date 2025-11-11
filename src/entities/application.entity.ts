@@ -247,6 +247,12 @@ export class Application {
   @Column({ nullable: true })
   live_outside_origin: string;
 
+  @Column({ nullable: true })
+  doc_valid_dates: string;
+
+  @Column({ nullable: true })
+  application_country: string;
+
   @BeforeInsert()
   async generateIds() {
     this.visa_id = Math.floor(1000 + Math.random() * 9000);
