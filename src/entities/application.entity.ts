@@ -253,6 +253,9 @@ export class Application {
   @Column({ nullable: true })
   application_country: string;
 
+  @Column({ nullable: true })
+  payment_ref_id: string;
+
   @BeforeInsert()
   async generateIds() {
     this.visa_id = Math.floor(1000 + Math.random() * 9000);
