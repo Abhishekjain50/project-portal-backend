@@ -509,7 +509,7 @@ export class AdminService {
   async getApplicationById(id: number, userId: number) {
     try {
       const application = await this.dataSource.getRepository("application").findOne({
-        where: { id, user: { id: userId } }
+        where: { id }
       });
       
       if (!application) {
