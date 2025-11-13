@@ -478,6 +478,7 @@ export class AdminService {
         where = {id: Not(IsNull())};
       } else {
         where = { user: { id: userId } };
+        limit = 1;
       }
       
       // Add status filter if provided (only success or failed)
